@@ -1,5 +1,6 @@
 package in.indetech.jarvis;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IntegerRes;
@@ -16,6 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.eazegraph.lib.charts.BarChart;
+import org.eazegraph.lib.charts.PieChart;
+import org.eazegraph.lib.models.BarModel;
+import org.eazegraph.lib.models.PieModel;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
@@ -28,6 +34,16 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final String time = Constants.getCurrentTime();
+        Log.d("time test", time);
+        String to_date = (Integer.parseInt(Constants.getDate()) - 7) + "";
+        if(to_date.length()==1){
+            to_date = "0"+to_date;
+        }
+        final String to_time = time.substring(0, 8) + to_date;
+
+        setUpGraph(time,to_time);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,13 +52,7 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
 
 
-                String time = Constants.getCurrentTime();
-                Log.d("time test", time);
-                String to_date = (Integer.parseInt(Constants.getDate()) - 7) + "";
-                if(to_date.length()==1){
-                    to_date = "0"+to_date;
-                }
-                String to_time = time.substring(0, 8) + to_date;
+
                 getMessages(time, to_time);
 
             }
@@ -58,6 +68,35 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void setUpGraph(String time, String to_time) {
+
+//        BarChart mBarChart = (BarChart) findViewById(R.id.barChart);
+
+        PieChart pieChart = (PieChart) findViewById(R.id.piechart);
+
+        DbHelper dbHelper = new DbHelper(MainActivity.this);
+        ArrayList<String> users = dbHelper.getAllUsers();
+
+        for(int i=0;i<users.size();i++){
+            float count =(float) dbHelper.getAllMessagesCount(users.get(i),time,to_time);
+//            mBarChart.addBar(new BarModel(user,count, Color.RED));
+            pieChart.addPieSlice(new PieModel("Freetime", count, Color.parseColor(Constants.color_array[i%12])));
+        }
+
+
+//        mBarChart.addBar(new BarModel(2.3f, 0xFF123456));
+//        mBarChart.addBar(new BarModel(2.f,  0xFF343456));
+//        mBarChart.addBar(new BarModel(3.3f, 0xFF563456));
+//        mBarChart.addBar(new BarModel(1.1f, 0xFF873F56));
+//        mBarChart.addBar(new BarModel(2.7f, 0xFF56B7F1));
+//        mBarChart.addBar(new BarModel(2.f,  0xFF343456));
+//        mBarChart.addBar(new BarModel(0.4f, 0xFF1FF4AC));
+//        mBarChart.addBar(new BarModel(4.f,  0xFF1BA4E6));
+
+        pieChart.startAnimation();
+
+    }
+
     private void getMessages(final String from, final String to) {
 
         Log.d("test time", "from " + from + " to " + to);
@@ -70,6 +109,7 @@ public class MainActivity extends AppCompatActivity
                 DbHelper dbHelper = new DbHelper(MainActivity.this);
                 ArrayList<String> users = dbHelper.getAllUsers();
                 for (String username : users) {
+
                     int count = dbHelper.getAllMessagesCount(username, from, to);
                     Log.d("test message count", "" + count);
                 }
