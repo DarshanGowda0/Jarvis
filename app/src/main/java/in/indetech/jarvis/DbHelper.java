@@ -76,9 +76,9 @@ public class DbHelper extends SQLiteOpenHelper {
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("select * from " + MESSAGES_TABLE
-                //+
-                //" where " + USER_NAME + " = '" + username + "' "
-                //"and " + MESSAGE_TIME + " >= '" + from_time + "' and " + MESSAGE_TIME + " <= '" + to_time + "'"
+                +
+                " where " + USER_NAME + " = '" + username + "' "+
+                "and " + MESSAGE_TIME + " <= '" + from_time + "' and " + MESSAGE_TIME + " >= '" + to_time + "'"
                 , null);
         Log.d(TAG, "in cursor");
 
