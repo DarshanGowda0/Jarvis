@@ -7,13 +7,6 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="in.indetech.jarvis.SplashScreen">
+    tools:context="in.indetech.jarvis.SelectContactsScreen">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Splash Screen!"
-        android:textSize="25sp"
-        android:gravity="center"/>
 </RelativeLayout>
