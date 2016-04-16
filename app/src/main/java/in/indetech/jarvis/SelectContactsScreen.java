@@ -43,10 +43,10 @@ public class SelectContactsScreen extends AppCompatActivity {
 
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     private void checkNotificationPermission() {
 
-        if (preferences.getBoolean(Constants.PERMISSION_PREF, false)) {
+
+        if (!preferences.getBoolean(Constants.PERMISSION_PREF, false)) {
 
             Intent callSettingIntent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
             startActivityForResult(callSettingIntent, reqCode);
