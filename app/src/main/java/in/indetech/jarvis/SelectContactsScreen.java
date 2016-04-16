@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
@@ -137,11 +138,7 @@ public class SelectContactsScreen extends AppCompatActivity {
 
     private void moveToNextActivity() {
 
-        for (ContactData contactData : contactList) {
-            if (contactData.selected) {
-                Log.d("test contacts", contactData.name);
-            }
-        }
+        storeInDb();
 
         storeInPrefs();
 
@@ -149,6 +146,28 @@ public class SelectContactsScreen extends AppCompatActivity {
         startActivity(intent);
 
         finish();
+
+    }
+
+    private void storeInDb() {
+
+        new AsyncTask<Void,Void,Void>(){
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                DbHelper dbHelper = new DbHelper(SelectContactsScreen.this);
+
+
+                for (ContactData contactData : contactList) {
+                    if (contactData.selected) {
+                        dbHelper.insertUsers(contactData.name);
+                    }
+                }
+
+                return null;
+            }
+        }.execute();
 
     }
 

@@ -1,8 +1,11 @@
 package in.indetech.jarvis;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -29,6 +34,17 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+
+                String time = Constants.getCurrentTime();
+                Log.d("time test", time);
+                String to_date = (Integer.parseInt(Constants.getDate()) - 7) + "";
+                if(to_date.length()==1){
+                    to_date = "0"+to_date;
+                }
+                String to_time = time.substring(0, 8) + to_date;
+                getMessages(time, to_time);
+
             }
         });
 
@@ -40,6 +56,27 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void getMessages(final String from, final String to) {
+
+        Log.d("test time", "from " + from + " to " + to);
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                DbHelper dbHelper = new DbHelper(MainActivity.this);
+                ArrayList<String> users = dbHelper.getAllUsers();
+                for (String username : users) {
+                    int count = dbHelper.getAllMessagesCount(username, from, to);
+                    Log.d("test message count", "" + count);
+                }
+                return null;
+            }
+        }.execute();
+
     }
 
     @Override

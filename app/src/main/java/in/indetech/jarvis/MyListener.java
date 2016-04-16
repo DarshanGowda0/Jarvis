@@ -13,11 +13,22 @@ public class MyListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         //..............
 
-        String str = sbn.getNotification().toString();
+        if (sbn != null && sbn.getPackageName().equalsIgnoreCase("com.whatsapp")) {
 
-        String s = "" + sbn.getNotification().tickerText;
+            String str = sbn.getNotification().toString();
 
-        Log.d("testing", s);
+            String s = "" + sbn.getNotification().tickerText;
+            Log.d("testing from listener", s);
+
+            if (!s.equals("null")) {
+                String username = s.substring(13);
+                String time = Constants.getCurrentTime();
+                DbHelper dbHelper = new DbHelper(getApplicationContext());
+                dbHelper.insertMessages(username, time);
+            }
+
+
+        }
 
     }
 
