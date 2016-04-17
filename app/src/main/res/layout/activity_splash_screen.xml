@@ -7,13 +7,25 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="in.indetech.jarvis.SplashScreen">
+    tools:context="in.indetech.jarvis.SplashScreen"
+    android:background="@drawable/material_bg">
+
+    <TextVie
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="58dp"
+        android:textColor="@android:color/white"
+        android:text="Jarvis"
+        android:typeface="serif"
+        android:textStyle="bold|italic"
+        android:layout_centerInParent="true"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Splash Screen!"
-        android:textSize="25sp"
-        android:gravity="center"/>
+        android:text="copyright 2016"
+        android:textColor="@android:color/black"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>
