@@ -1,5 +1,6 @@
 package in.indetech.jarvis;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,12 +38,12 @@ public class MainActivity extends AppCompatActivity
         final String time = Constants.getCurrentTime();
         Log.d("time test", time);
         String to_date = (Integer.parseInt(Constants.getDate()) - 7) + "";
-        if(to_date.length()==1){
-            to_date = "0"+to_date;
+        if (to_date.length() == 1) {
+            to_date = "0" + to_date;
         }
         final String to_time = time.substring(0, 8) + to_date;
 
-        setUpGraph(time,to_time);
+        setUpGraph(time, to_time);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-
 
 
                 getMessages(time, to_time);
@@ -77,21 +77,11 @@ public class MainActivity extends AppCompatActivity
         DbHelper dbHelper = new DbHelper(MainActivity.this);
         ArrayList<String> users = dbHelper.getAllUsers();
 
-        for(int i=0;i<users.size();i++){
-            float count =(float) dbHelper.getAllMessagesCount(users.get(i),time,to_time);
+        for (int i = 0; i < users.size(); i++) {
+            float count = (float) dbHelper.getAllMessagesCount(users.get(i), time, to_time);
 //            mBarChart.addBar(new BarModel(user,count, Color.RED));
-            pieChart.addPieSlice(new PieModel("Freetime", count, Color.parseColor(Constants.color_array[i%12])));
+            pieChart.addPieSlice(new PieModel(users.get(i), count, Color.parseColor(Constants.color_array[i % 12])));
         }
-
-
-//        mBarChart.addBar(new BarModel(2.3f, 0xFF123456));
-//        mBarChart.addBar(new BarModel(2.f,  0xFF343456));
-//        mBarChart.addBar(new BarModel(3.3f, 0xFF563456));
-//        mBarChart.addBar(new BarModel(1.1f, 0xFF873F56));
-//        mBarChart.addBar(new BarModel(2.7f, 0xFF56B7F1));
-//        mBarChart.addBar(new BarModel(2.f,  0xFF343456));
-//        mBarChart.addBar(new BarModel(0.4f, 0xFF1FF4AC));
-//        mBarChart.addBar(new BarModel(4.f,  0xFF1BA4E6));
 
         pieChart.startAnimation();
 
@@ -155,19 +145,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Intent intent;
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.home) {
 
+        } else if (id == R.id.friends) {
+            intent = new Intent(MainActivity.this, SelectContactsScreen.class);
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 

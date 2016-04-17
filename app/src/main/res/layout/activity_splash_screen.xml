@@ -10,7 +10,7 @@
     tools:context="in.indetech.jarvis.SplashScreen"
     android:background="@drawable/material_bg">
 
-    <TextVie
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="58dp"

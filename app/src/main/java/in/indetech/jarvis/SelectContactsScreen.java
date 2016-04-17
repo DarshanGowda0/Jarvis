@@ -1,6 +1,7 @@
 package in.indetech.jarvis;
 
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -8,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,12 +25,15 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class SelectContactsScreen extends AppCompatActivity {
 
     ListView mListView;
     ArrayList<String> myWhatsappContacts = new ArrayList<>();
     ArrayList<ContactData> contactList = new ArrayList<>();
+    ArrayList<String> selected_users = new ArrayList<>();
     SharedPreferences preferences;
     int reqCode = 1234;
 
@@ -40,7 +45,24 @@ public class SelectContactsScreen extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(SelectContactsScreen.this);
         checkNotificationPermission();
         getContacts();
+//        getSelectedUsers();
         setUpListView();
+
+    }
+
+    private void getSelectedUsers() {
+
+        DbHelper dbHelper = new DbHelper(SelectContactsScreen.this);
+        selected_users = dbHelper.getAllUsers();
+
+        for (String user : selected_users) {
+            for (int i = 0; i < contactList.size(); i++) {
+                if(contactList.get(i).name.equals(user)){
+                    contactList.get(i).selected=true;
+                }
+            }
+        }
+
 
     }
 
@@ -49,8 +71,23 @@ public class SelectContactsScreen extends AppCompatActivity {
 
         if (!preferences.getBoolean(Constants.PERMISSION_PREF, false)) {
 
-            Intent callSettingIntent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
-            startActivityForResult(callSettingIntent, reqCode);
+            new AlertDialog.Builder(SelectContactsScreen.this).setTitle("Permission required")
+                    .setMessage("This app requires you to grant notification access")
+            .setPositiveButton("Open Settings", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent callSettingIntent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+                    startActivityForResult(callSettingIntent, reqCode);
+
+                }
+            })
+            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
 
         }
 
@@ -81,6 +118,7 @@ public class SelectContactsScreen extends AppCompatActivity {
             }
         });
 
+
     }
 
     //get whatsApp contacts
@@ -99,6 +137,7 @@ public class SelectContactsScreen extends AppCompatActivity {
             myWhatsappContacts.add(c.getString(contactNameColumn));
         }
 
+        sortArray();
 
         for (int i = 0; i < myWhatsappContacts.size(); i++) {
             ContactData contactData = new ContactData();
@@ -108,6 +147,19 @@ public class SelectContactsScreen extends AppCompatActivity {
         }
 
         c.close();
+
+    }
+
+    private void sortArray() {
+
+        Collections.sort(myWhatsappContacts, new Comparator<String>() {
+            @Override
+            public int compare(String name2, String name1)
+            {
+
+                return  name2.compareTo(name1);
+            }
+        });
 
     }
 
@@ -151,7 +203,7 @@ public class SelectContactsScreen extends AppCompatActivity {
 
     private void storeInDb() {
 
-        new AsyncTask<Void,Void,Void>(){
+        new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
