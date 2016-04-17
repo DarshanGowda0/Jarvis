@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="#fbe9e7"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="in.indetech.jarvis.MainActivity"
     tools:showIn="@layout/app_bar_main">
@@ -19,8 +19,20 @@
         app:egLegendTextSize="18sp"
         app:egUsePieRotation="true"
         app:egValueTextSize="36sp"
-        android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
+
+    <org.eazegraph.lib.charts.ValueLineChart
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cubiclinechart"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:egUseCubic="true"
+        app:egUseOverlapFill="true"
+        app:egCurveSmoothness="0.4"
+        app:egIndicatorLineColor="#FE6DA8"
+        android:layout_below="@+id/piechart"
+        app:egLegendHeight="40dp"
+        app:egShowStandardValue="true"/>
 
 
 </RelativeLayout>

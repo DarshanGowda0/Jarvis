@@ -17,16 +17,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import org.eazegraph.lib.charts.BarChart;
 import org.eazegraph.lib.charts.PieChart;
+import org.eazegraph.lib.charts.ValueLineChart;
+import org.eazegraph.lib.communication.IOnItemFocusChangedListener;
 import org.eazegraph.lib.models.BarModel;
 import org.eazegraph.lib.models.PieModel;
+import org.eazegraph.lib.models.ValueLinePoint;
+import org.eazegraph.lib.models.ValueLineSeries;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    ValueLineChart lineChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("MainActivity");
 
         final String time = Constants.getCurrentTime();
         Log.d("time test", time);
@@ -43,20 +54,23 @@ public class MainActivity extends AppCompatActivity
         }
         final String to_time = time.substring(0, 8) + to_date;
 
+        setUpSpinner();
+
         setUpGraph(time, to_time);
+        setUpLineGraph();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-
-                getMessages(time, to_time);
-
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//
+//
+//                getMessages(time, to_time);
+//
+//            }
+//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -68,11 +82,49 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void setUpLineGraph() {
+
+        lineChart = (ValueLineChart) findViewById(R.id.cubiclinechart);
+        loadData(0xFF63CBB0);
+
+    }
+
+    private void loadData(int color) {
+        ValueLineSeries series = new ValueLineSeries();
+        series.setColor(color);
+        for (int i = 0; i < 9; i++) {
+            series.addPoint(new ValueLinePoint("Day "+i,generateRandomNumber()));
+        }
+        lineChart.clearChart();
+        lineChart.addSeries(series);
+        lineChart.startAnimation();
+
+    }
+
+    private float generateRandomNumber() {
+
+        Random rand = new Random();
+        int va = rand.nextInt(100);
+        Log.d("rand", "" + va);
+        return va;
+    }
+
+    private void setUpSpinner() {
+
+
+        SpinnerAdapter spinnerAdapter = ArrayAdapter.createFromResource(getSupportActionBar().getThemedContext(), R.array.listItems, android.R.layout.simple_spinner_dropdown_item);
+
+        Spinner spinner = (Spinner) findViewById(R.id.modes);
+        spinner.setAdapter(spinnerAdapter);
+
+
+    }
+
     private void setUpGraph(String time, String to_time) {
 
 //        BarChart mBarChart = (BarChart) findViewById(R.id.barChart);
 
-        PieChart pieChart = (PieChart) findViewById(R.id.piechart);
+        final PieChart pieChart = (PieChart) findViewById(R.id.piechart);
 
         DbHelper dbHelper = new DbHelper(MainActivity.this);
         ArrayList<String> users = dbHelper.getAllUsers();
@@ -84,6 +136,16 @@ public class MainActivity extends AppCompatActivity
         }
 
         pieChart.startAnimation();
+        pieChart.setOnItemFocusChangedListener(new IOnItemFocusChangedListener() {
+            @Override
+            public void onItemFocusChanged(int _Position) {
+
+                loadData(Color.parseColor(Constants.color_array[_Position]));
+//                lineChart.notify();
+            }
+        });
+
+
 
     }
 
@@ -119,27 +181,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

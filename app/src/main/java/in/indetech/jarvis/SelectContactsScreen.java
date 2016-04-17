@@ -87,7 +87,7 @@ public class SelectContactsScreen extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     finish();
                 }
-            });
+            }).show();
 
         }
 
@@ -155,7 +155,7 @@ public class SelectContactsScreen extends AppCompatActivity {
         Collections.sort(myWhatsappContacts, new Comparator<String>() {
             @Override
             public int compare(String name2, String name1)
-            {
+            {/////.........
 
                 return  name2.compareTo(name1);
             }

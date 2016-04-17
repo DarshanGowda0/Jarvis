@@ -8,4 +8,12 @@
 
     <string name="action_settings">Settings</string>
     <string name="listenerService">My listener</string>
+
+    <array name="listItems">
+        <item>Today</item>
+        <item>Past 7 days</item>
+        <item>Past 1 month</item>
+        <item>Past 6 months</item>
+    </array>
+
 </resources>
