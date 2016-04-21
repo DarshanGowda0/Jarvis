@@ -1,7 +1,7 @@
 # Jarvis
 
 Jarvis a social analytics app which keeps track of your whatsApp messages from your friends,
-It's a personal advisor which notifies you when you are loosing your conatact with any person or the other way round(if you are getting too close to anyone). 
+It's a personal advisor which notifies you when you are loosing your contact with any person or the other way round(if you are getting too close to anyone). 
 
 ![Alt text](http://i.imgur.com/dMm06DG.png "Splash Screen")
 ![Alt text](http://i.imgur.com/jpkwj29.png "Main Screen")
