@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         ValueLineSeries series = new ValueLineSeries();
         series.setColor(color);
         for (int i = 0; i < 9; i++) {
-            series.addPoint(new ValueLinePoint("Day "+i,generateRandomNumber()));
+            series.addPoint(new ValueLinePoint("Day " + i, generateRandomNumber()));
         }
         lineChart.clearChart();
         lineChart.addSeries(series);
@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-
     }
 
     private void getMessages(final String from, final String to) {
@@ -194,7 +193,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.friends) {
             intent = new Intent(MainActivity.this, SelectContactsScreen.class);
             startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.stalkFriends) {
+
+            intent = new Intent(MainActivity.this, StalkFriends.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_manage) {
 

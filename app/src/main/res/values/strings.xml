@@ -15,5 +15,6 @@
         <item>Past 1 month</item>
         <item>Past 6 months</item>
     </array>
+    <string name="title_activity_stalk_friends">StalkFriends</string>
 
 </resources>
